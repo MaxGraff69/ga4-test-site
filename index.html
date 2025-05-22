@@ -3,48 +3,100 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GA4 Test Page</title>
+  <title>GA4 Event Tracking Demo</title>
 
-  <!-- Google tag (gtag.js)  -->
+  <!-- Google Analytics 4 setup script -->
+  <!-- This must go in the <head> so it's ready before anything else runs -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XK75VR6923"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
+    function gtag() { dataLayer.push(arguments); }
 
     gtag('js', new Date());
-    gtag('set', 'debug_mode', true);        // shows all localhost hits in DebugView
-    gtag('config', 'G-XK75VR6923');         // make sure the ID matches your stream
+    gtag('set', 'debug_mode', true); // enables DebugView visibility
+    gtag('config', 'G-XK75VR6923');
   </script>
 
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      margin-top: 60px;
-    }
-    button {
-      margin: 20px;
-      padding: 16px 32px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    button { margin: 15px; padding: 10px 20px; font-size: 16px; }
+    form { margin-top: 40px; }
   </style>
 </head>
 <body>
-  <h1>GA4 test page</h1>
-  <p>Click a button to fire <code>button_click</code> events.</p>
+  <h1>GA4 Event Tracking Demo</h1>
 
+  <!-- Buttons tracked with custom events -->
   <button onclick="sendEvent('Red Button')">Red Button</button>
   <button onclick="sendEvent('Blue Button')">Blue Button</button>
 
+  <!-- Outbound link with inline onclick tracking -->
+  <p>
+    <a href="https://example.com" target="_blank"
+       onclick="gtag('event', 'outbound_click', { destination: 'example.com' }); console.log('outbound_click → example.com')">
+      Visit External Site
+    </a>
+  </p>
+
+  <!-- Simple form with submission tracking -->
+  <form id="contactForm" onsubmit="trackFormSubmit()">
+    <input type="text" placeholder="Your Name" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- YouTube iframe embed with tracking -->
+  <iframe id="ytplayer" width="560" height="315"
+    src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1"
+    frameborder="0" allowfullscreen></iframe>
+
+  <!-- ALL SCRIPT HANDLERS GO AT THE END OF BODY -->
+  <!-- Why? Because we want the full page content to load first, so elements exist -->
+
   <script>
+    // Custom button event sender
     function sendEvent(buttonName) {
-      console.log('button_click triggered for:', buttonName);
-      gtag('event', 'button_click', {
-        button_name: buttonName
+      gtag('event', 'button_click', { button_name: buttonName });
+      console.log('button_click →', buttonName);
+    }
+
+    // Form submission tracker
+    function trackFormSubmit() {
+      gtag('event', 'form_submit', { form_id: 'contactForm' });
+      console.log('form_submit → contactForm');
+    }
+
+    // Scroll tracking logic
+    window.addEventListener('scroll', () => {
+      const scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
+      if (scrollPercent >= 0.9 && !window.scrollFired) {
+        window.scrollFired = true;
+        gtag('event', 'scroll_depth', { depth: '90%' });
+        console.log('scroll_depth → 90%');
+      }
+    });
+
+    // YouTube API logic
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('ytplayer', {
+        events: {
+          onStateChange: onPlayerStateChange
+        }
       });
     }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        gtag('event', 'video_play', { video_id: 'dQw4w9WgXcQ' });
+      } else if (event.data === YT.PlayerState.PAUSED) {
+        gtag('event', 'video_pause', { video_id: 'dQw4w9WgXcQ' });
+      } else if (event.data === YT.PlayerState.ENDED) {
+        gtag('event', 'video_complete', { video_id: 'dQw4w9WgXcQ' });
+      }
+    }
   </script>
+
+  <!-- This script loads the YouTube iframe API AFTER the content is ready -->
+  <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
-
