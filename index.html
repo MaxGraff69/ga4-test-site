@@ -25,7 +25,15 @@
   <h1>GA4 test page</h1>
   <p>Click a button to fire <code>button_click</code> events.</p>
 
-  <button onclick="gtag('event','button_click',{button_name:'Red'})">Red Button</button>
-  <button onclick="gtag('event','button_click',{button_name:'Blue'})">Blue Button</button>
-</body>
-</html>
+<button onclick="sendEvent('Red Button')">Red Button</button>
+<button onclick="sendEvent('Blue Button')">Blue Button</button>
+
+<script>
+  function sendEvent(buttonName) {
+    console.log('button_click triggered for:', buttonName);  // 👈 log to console
+    gtag('event', 'button_click', {
+      button_name: buttonName
+    });
+  }
+</script>
+
