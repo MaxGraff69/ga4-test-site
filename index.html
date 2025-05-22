@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GA4 Test Page</title>
+
+  <!-- Google tag (gtag.js)  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XK75VR6923"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+
+    gtag('js', new Date());
+    gtag('set', 'debug_mode', true);        // shows all localhost hits in DebugView
+    gtag('config', 'G-XK75VR6923');         // make sure the ID matches your stream
+  </script>
+
+  <style>
+    body{font-family:sans-serif;text-align:center;margin-top:60px}
+    button{margin:20px;padding:16px 32px;font-size:16px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <h1>GA4 test page</h1>
+  <p>Click a button to fire <code>button_click</code> events.</p>
+
+  <button onclick="gtag('event','button_click',{button_name:'Red'})">Red Button</button>
+  <button onclick="gtag('event','button_click',{button_name:'Blue'})">Blue Button</button>
+</body>
+</html>
