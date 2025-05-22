@@ -17,23 +17,34 @@
   </script>
 
   <style>
-    body{font-family:sans-serif;text-align:center;margin-top:60px}
-    button{margin:20px;padding:16px 32px;font-size:16px;cursor:pointer}
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 60px;
+    }
+    button {
+      margin: 20px;
+      padding: 16px 32px;
+      font-size: 16px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>GA4 test page</h1>
   <p>Click a button to fire <code>button_click</code> events.</p>
 
-<button onclick="sendEvent('Red Button')">Red Button</button>
-<button onclick="sendEvent('Blue Button')">Blue Button</button>
+  <button onclick="sendEvent('Red Button')">Red Button</button>
+  <button onclick="sendEvent('Blue Button')">Blue Button</button>
 
-<script>
-  function sendEvent(buttonName) {
-    console.log('button_click triggered for:', buttonName);  // 👈 log to console
-    gtag('event', 'button_click', {
-      button_name: buttonName
-    });
-  }
-</script>
+  <script>
+    function sendEvent(buttonName) {
+      console.log('button_click triggered for:', buttonName);
+      gtag('event', 'button_click', {
+        button_name: buttonName
+      });
+    }
+  </script>
+</body>
+</html>
 
